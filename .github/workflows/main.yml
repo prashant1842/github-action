@@ -12,6 +12,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    
 
     steps:
       - name: Checkout repository
@@ -23,4 +24,4 @@ jobs:
       - name: Run test
         run: |
           echo "Running application tests..."
-          echo "Tests passed!"
+          exit 1 
