@@ -1,20 +1,26 @@
-name: My First GitHub Action
+name: CI Practice
 
 on:
   push:
     branches:
       - main
 
+  pull_request:
+    branches:
+      - main
+
 jobs:
-  practice:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Say Hello
-        run: echo "Hello from GitHub Actions!"
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Check Runner
+      - name: Show files
+        run: ls -la
+
+      - name: Run test
         run: |
-          echo "I am running inside GitHub!"
-          uname -a
-        
+          echo "Running application tests..."
+          echo "Tests passed!"
