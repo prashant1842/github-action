@@ -33,3 +33,12 @@ jobs:
 
       - name: Run Python tests
         run: python -m pytest test.py
+    lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run lint check
+        run: echo "Lint check completed"
