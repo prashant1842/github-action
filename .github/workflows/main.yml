@@ -35,6 +35,7 @@ jobs:
         run: python -m pytest test.py
 
   lint:
+    needs: test
     runs-on: ubuntu-latest
 
     steps:
