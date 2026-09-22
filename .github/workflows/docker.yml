@@ -1,27 +1,35 @@
-name: Docker CI
+name: Docker CI/CD
 
 on:
   push:
     branches:
       - main
 
-  pull_request:
-    branches:
-      - main
-
 jobs:
-  docker-build:
+  docker:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build Docker image
-        run: docker build -t github-actions-practice .
+        run: |
+          docker build \
+            -t ghcr.io/${{ github.repository_owner }}/github-actions-practice:latest .
 
-      - name: Show Docker images
-        run: docker images
-
-      - name: Test Docker image
-        run: docker run --rm github-actions-practice
+      - name: Push Docker image
+        run: |
+          docker push \
+            ghcr.io/${{ github.repository_owner }}/github-actions-practice:latest
