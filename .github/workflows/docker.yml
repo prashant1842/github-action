@@ -27,9 +27,15 @@ jobs:
       - name: Build Docker image
         run: |
           docker build \
+            -t ghcr.io/${{ github.repository_owner }}/github-actions-practice:latest \
             -t ghcr.io/${{ github.repository_owner }}/github-actions-practice:${{ github.sha }} .
 
-      - name: Push Docker image
+      - name: Push latest image
+        run: |
+          docker push \
+            ghcr.io/${{ github.repository_owner }}/github-actions-practice:latest
+
+      - name: Push versioned image
         run: |
           docker push \
             ghcr.io/${{ github.repository_owner }}/github-actions-practice:${{ github.sha }}
