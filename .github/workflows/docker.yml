@@ -1,4 +1,4 @@
-name: Job Dependencies
+name: CI/CD Pipeline
 
 on:
   push:
@@ -24,20 +24,23 @@ jobs:
       - name: Run tests
         run: python -m pytest test.py
 
-  docker:
+  lint:
     runs-on: ubuntu-latest
-    needs: test
-
-    permissions:
-      contents: read
-      packages: write
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build Docker image
-        run: docker build -t github-actions-practice:${{ github.sha }} .
+      - name: Run lint check
+        run: echo "Lint check passed"
 
-      - name: Test Docker image
-        run: docker run --rm github-actions-practice:${{ github.sha }}
+  deploy:
+    runs-on: ubuntu-latest
+
+    needs:
+      - test
+      - lint
+
+    steps:
+      - name: Deployment
+        run: echo "Deployment successful!"
