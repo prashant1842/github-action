@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: Docker CI/CD
 
 on:
   push:
@@ -6,41 +6,46 @@ on:
       - main
 
 jobs:
-  test:
+  docker:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
         with:
-          python-version: '3.12'
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
+      - name: Build Docker image
+        run: |
+          docker build \
+            -t ghcr.io/${{ github.repository_owner }}/github-actions-practice:latest \
+            -t ghcr.io/${{ github.repository_owner }}/github-actions-practice:${{ github.sha }} .
 
-      - name: Run tests
-        run: python -m pytest test.py
+      - name: Inspect Docker image
+        run: |
+          docker inspect \
+            ghcr.io/${{ github.repository_owner }}/github-actions-practice:${{ github.sha }}
 
-  lint:
-    runs-on: ubuntu-latest
+      - name: Push latest image
+        run: |
+          docker push \
+            ghcr.io/${{ github.repository_owner }}/github-actions-practice:latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Push versioned image
+        run: |
+          docker push \
+            ghcr.io/${{ github.repository_owner }}/github-actions-practice:${{ github.sha }}
 
-      - name: Run lint check
-        run: echo "Lint check passed"
-
-  deploy:
-    runs-on: ubuntu-latest
-
-    needs:
-      - test
-      - lint
-
-    steps:
-      - name: Deployment
-        run: echo "Deployment successful!"
+      - name: Test Docker image
+        run: |
+          docker run --rm \
+            ghcr.io/${{ github.repository_owner }}/github-actions-practice:${{ github.sha }}
