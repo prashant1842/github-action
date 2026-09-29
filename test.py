@@ -1,10 +1,8 @@
-def test_addition():
-    assert 2 + 2 == 4
+def test_user_data():
+    user = {
+        "name": "Prashant",
+        "role": "Developer"
+    }
 
-
-def test_string():
-    assert "github".upper() == "GITHUB"
-
-
-def test_multiplication():
-    assert 5 * 5 == 25
+    assert user["name"] == "Prashant"
+    assert user["role"] == "Developer"
