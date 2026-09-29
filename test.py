@@ -6,6 +6,5 @@ def test_string():
     assert "github".upper() == "GITHUB"
 
 
-def test_list():
-    numbers = [1, 2, 3]
-    assert len(numbers) == 3
+def test_multiplication():
+    assert 5 * 5 == 25
