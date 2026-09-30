@@ -35,6 +35,19 @@ jobs:
           docker inspect \
             ghcr.io/${{ github.repository_owner }}/github-actions-practice:${{ github.sha }}
 
+      - name: Check Docker image size
+        run: |
+          docker images \
+            ghcr.io/${{ github.repository_owner }}/github-actions-practice:${{ github.sha }}
+
+      - name: Test Docker image
+        run: |
+          docker run --rm \
+            ghcr.io/${{ github.repository_owner }}/github-actions-practice:${{ github.sha }}
+
+      - name: Show Docker containers
+        run: docker ps -a
+
       - name: Push latest image
         run: |
           docker push \
@@ -45,7 +58,5 @@ jobs:
           docker push \
             ghcr.io/${{ github.repository_owner }}/github-actions-practice:${{ github.sha }}
 
-      - name: Test Docker image
-        run: |
-          docker run --rm \
-            ghcr.io/${{ github.repository_owner }}/github-actions-practice:${{ github.sha }}
+      - name: Workflow completed
+        run: echo "Docker CI/CD workflow completed successfully!"
